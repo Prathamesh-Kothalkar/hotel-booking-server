@@ -88,7 +88,7 @@ The LLM never accesses the database or business logic directly — it can only r
 
 Entities: `Hotel`, `Room`, `User`, `Booking`, `Payment`, `Refund`
 
-Full DDL available in [`hotel_booking_schema.sql`](./hotel_booking_schema.sql).
+Full DDL available in [`Project Document`](https://docs.google.com/document/d/1nNh9MTvO5GtJBtDHhuKwDEAPXLVGITlkWMmDFsnwAQE/edit?usp=sharing).
 
 ---
 
@@ -138,15 +138,10 @@ Full DDL available in [`hotel_booking_schema.sql`](./hotel_booking_schema.sql).
 ```bash
 # Clone the repository
 git clone https://github.com/prathamesh-kothalkar/hotel-booking-server.git
-cd <repo-name>
+cd hotel-booking-server
 
 # Configure the database
 createdb hotel_booking
-
-# Update src/main/resources/application.properties with your DB credentials
-
-# Run the schema
-psql -d hotel_booking -f hotel_booking_schema.sql
 
 # Build and run
 ./mvnw spring-boot:run
