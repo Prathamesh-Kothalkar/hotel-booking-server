@@ -1,5 +1,7 @@
 package dev.prathamesh.model;
 
+
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
@@ -9,6 +11,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity(name = "HotelModel")
 @Table(name="hotels")
@@ -32,10 +37,12 @@ public class HotelModel{
 
 	    @Column(columnDefinition = "TEXT[]")
 	    private String[] images;
-
+	    
+	    @CreationTimestamp
 	    @Column(name = "created_at", nullable = false, updatable = false)
 	    private OffsetDateTime createdAt;
 
+	    @UpdateTimestamp
 	    @Column(name = "updated_at", nullable = false)
 	    private OffsetDateTime updatedAt;
 	    
