@@ -4,8 +4,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+
 
 import dev.prathamesh.types.RefundStatus;
 import jakarta.persistence.Column;
@@ -54,8 +53,7 @@ public class RefundModel {
     private String reason;
 
     @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(nullable = false, columnDefinition = "refund_status")
+    @Column(nullable = false)
     private RefundStatus status = RefundStatus.REQUESTED;
 
     @CreationTimestamp
@@ -68,5 +66,76 @@ public class RefundModel {
     public RefundModel() {
     }
 
-    // Getters and setters
+	public Long getRefundId() {
+		return refundId;
+	}
+
+	public void setRefundId(Long refundId) {
+		this.refundId = refundId;
+	}
+
+	public PaymentModel getPayment() {
+		return payment;
+	}
+
+	public void setPayment(PaymentModel payment) {
+		this.payment = payment;
+	}
+
+	public BookingModel getBooking() {
+		return booking;
+	}
+
+	public void setBooking(BookingModel booking) {
+		this.booking = booking;
+	}
+
+	public UserModel getUser() {
+		return user;
+	}
+
+	public void setUser(UserModel user) {
+		this.user = user;
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
+		this.amount = amount;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+
+	public RefundStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(RefundStatus status) {
+		this.status = status;
+	}
+
+	public OffsetDateTime getRequestedAt() {
+		return requestedAt;
+	}
+
+	public void setRequestedAt(OffsetDateTime requestedAt) {
+		this.requestedAt = requestedAt;
+	}
+
+	public OffsetDateTime getProcessedAt() {
+		return processedAt;
+	}
+
+	public void setProcessedAt(OffsetDateTime processedAt) {
+		this.processedAt = processedAt;
+	}
+    
 }
