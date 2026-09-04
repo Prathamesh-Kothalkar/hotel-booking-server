@@ -1,15 +1,22 @@
 package dev.prathamesh.service;
 
+
 import java.time.LocalDate;
 import java.util.List;
 
+
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import dev.prathamesh.model.HotelModel;
 import dev.prathamesh.model.RoomModel;
 import dev.prathamesh.repository.HotelRepo;
 import dev.prathamesh.repository.RoomRepo;
+import dev.prathamesh.specification.RoomSpecification;
 import dev.prathamesh.types.CreateRoomRequest;
+import dev.prathamesh.types.RoomSearchRequest;
 
 @Service
 public class RoomService{
@@ -74,4 +81,58 @@ public class RoomService{
 	            guests
 	    );
 	}
+	
+
+    public Page<RoomModel> searchRooms(
+            RoomSearchRequest request,
+            Pageable pageable) {
+
+        validate(request);
+
+        Specification<RoomModel> specification =
+                RoomSpecification.search(request);
+
+        return roomRepo.findAll(
+                specification,
+                pageable
+        );
+    }
+	
+	
+	private void validate(RoomSearchRequest request) {
+
+        if (request.getCheckIn() != null &&
+            request.getCheckOut() != null) {
+
+            if (!request.getCheckIn()
+                    .isBefore(request.getCheckOut())) {
+
+                throw new IllegalArgumentException(
+                    "Check-in date must be before check-out date"
+                );
+            }
+        }
+
+        if (request.getGuests() != null &&
+            request.getGuests() < 1) {
+
+            throw new IllegalArgumentException(
+                "Guests must be at least 1"
+            );
+        }
+
+        if (request.getMinPrice() != null &&
+            request.getMaxPrice() != null) {
+
+            if (request.getMinPrice()
+                    .compareTo(request.getMaxPrice()) > 0) {
+
+                throw new IllegalArgumentException(
+                    "Minimum price cannot exceed maximum price"
+                );
+            }
+        }
+    }
+	
+	
 }

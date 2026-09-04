@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.prathamesh.model.BookingModel;
+import dev.prathamesh.model.RefundModel;
 import dev.prathamesh.model.UserModel;
 import dev.prathamesh.service.UserService;
 
@@ -33,6 +34,11 @@ public class UserController{
 	@GetMapping("/{id}/bookings")
 	public List<BookingModel> getAllBookings(@PathVariable Long id){
 		return userService.getAllBookings(id);
+	}
+	
+	@GetMapping("/{id}/refunds")
+	public List<RefundModel> getAllRefunds(@PathVariable Long id){
+		return userService.getAllRefunds(id);
 	}
 	
 	@PostMapping("")

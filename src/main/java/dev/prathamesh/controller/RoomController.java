@@ -1,20 +1,27 @@
 package dev.prathamesh.controller;
+
 import java.time.LocalDate;
 import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import dev.prathamesh.model.RoomModel;
 import dev.prathamesh.service.RoomService;
 import dev.prathamesh.types.CreateRoomRequest;
+import dev.prathamesh.types.RoomSearchRequest;
+import dev.prathamesh.types.RoomSearchResponse;
 
 @RestController
 @RequestMapping("/api/v1/rooms")
@@ -38,30 +45,38 @@ public class RoomController{
 		return roomService.getRoomById(id);
 	}
 	
+//	@GetMapping("/search")
+//	public List<RoomModel> searchRooms(
+//
+//	        @RequestParam(required = false)
+//	        String location,
+//
+//	        @RequestParam(required = false)
+//	        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+//	        LocalDate checkIn,
+//
+//	        @RequestParam(required = false)
+//	        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+//	        LocalDate checkOut,
+//
+//	        @RequestParam(required = false)
+//	        Short guests
+//	) {
+//
+//	    return roomService.getRoomsByQuery(
+//	            location,
+//	            checkIn,
+//	            checkOut,
+//	            guests
+//	    );
+//	}
+	
 	@GetMapping("/search")
-	public List<RoomModel> searchRooms(
+    public Page<RoomModel> searchRooms(
+            @ModelAttribute RoomSearchRequest request,
+            Pageable pageable) {
 
-	        @RequestParam(required = false)
-	        String location,
-
-	        @RequestParam(required = false)
-	        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	        LocalDate checkIn,
-
-	        @RequestParam(required = false)
-	        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-	        LocalDate checkOut,
-
-	        @RequestParam(required = false)
-	        Short guests
-	) {
-
-	    return roomService.getRoomsByQuery(
-	            location,
-	            checkIn,
-	            checkOut,
-	            guests
-	    );
-	}
+        return roomService.searchRooms(request, pageable);
+    }
 	
 }
