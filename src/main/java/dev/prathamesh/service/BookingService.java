@@ -167,8 +167,8 @@ public class BookingService {
         }
 
         booking.setStatus(BookingStatus.CONFIRMED);
-        room.setStatus(RoomStatus.BOOKED);
-        roomRepo.save(room);
+//        room.setStatus(RoomStatus.BOOKED);
+//        roomRepo.save(room);
         return bookingRepo.save(booking);
     }
 }
