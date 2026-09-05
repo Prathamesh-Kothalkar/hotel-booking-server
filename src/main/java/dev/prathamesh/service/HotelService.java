@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import dev.prathamesh.expection.ResourceNotFoundException;
 import dev.prathamesh.model.HotelModel;
 import dev.prathamesh.model.RoomModel;
 import dev.prathamesh.repository.HotelRepo;
@@ -29,14 +30,14 @@ public class HotelService{
 	}
 	
 	public HotelModel getHotelById(Long id) {
-		return hotelRepo.findById(id).orElse(null);
+		return hotelRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Hotel not found with id: " + id));
 	}
 	
 	public List<RoomModel> getRoomsByHotelId(Long hotelId) {
 
         // Optional but recommended:
         if (!hotelRepo.existsById(hotelId)) {
-            throw new RuntimeException("Hotel not found with id: " + hotelId);
+            throw new ResourceNotFoundException("Hotel not found with id: " + hotelId);
         }
 
         return roomRepo.findByHotel_hotel_id(hotelId);

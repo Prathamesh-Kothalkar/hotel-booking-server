@@ -45,7 +45,7 @@ public class BookingService {
     }
     
     public BookingModel getBookingById(Long id) {
-    	return bookingRepo.findById(id).orElse(null);
+    	return bookingRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking not found with id: " + id));
     }
     
     @Transactional
@@ -157,10 +157,6 @@ public class BookingService {
         if (!result.success()) {
             booking.setStatus(BookingStatus.CANCELLED);
             bookingRepo.save(booking);
-            
-            room.setStatus(RoomStatus.AVAILABLE);
-            roomRepo.save(room);
-            
             // room was never marked unavailable, so no cleanup needed there —
             // the failed booking simply won't count toward future overlap checks
             throw new PaymentFailedException("Payment failed for booking " + booking.getBookingId());

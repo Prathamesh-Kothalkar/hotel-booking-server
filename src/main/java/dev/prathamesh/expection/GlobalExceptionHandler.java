@@ -55,11 +55,22 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
     
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalState(IllegalStateException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(new ErrorResponse(409, "CONFLICT", ex.getMessage()));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponse(400, "BAD_REQUEST", ex.getMessage()));
+    }
+    
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleInternalServerError(Exception ex) {
-//    	System.out.println();
+    public ResponseEntity<ErrorResponse> handleInternalServerError(Exception ex) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ex.getMessage());
+                .body(new ErrorResponse(500, "Something went wrong ", "Please Try again later"));
     }
 }
