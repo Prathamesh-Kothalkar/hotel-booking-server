@@ -37,11 +37,11 @@ public class UserService{
 	}
 	
 	public UserModel getUserById(Long id) {
-		return userRepo.findById(id).orElse(null);
+		return userRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("User not found"));
 	}
 	
 	public List<BookingModel> getAllBookings(Long id){
-		if(userRepo.findById(id).orElse(null)==null) {
+		if(!userRepo.existsById(id)) {
 			throw new ResourceNotFoundException("User not Found with :- "+id);
 		}
 		return bookingRepo.findByUserId(id);

@@ -154,7 +154,7 @@ The API will be available at `http://localhost:8080`.
 ## 🗺️ Roadmap
 
 - [x] Phase 1 — Schema design + concurrency-safe CRUD API
-- [ ] Concurrent load tests proving overselling fix
+- [x] Concurrent load tests proving overselling fix
 - [ ] Phase 2 — Spring AI `@Tool` integration
 - [ ] Streaming responses + latency optimization
 - [ ] Guardrails & audit logging for AI-triggered actions

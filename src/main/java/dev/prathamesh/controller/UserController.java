@@ -1,7 +1,9 @@
 package dev.prathamesh.controller;
+
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,36 +18,55 @@ import dev.prathamesh.service.UserService;
 
 @RestController
 @RequestMapping("/api/v1/users")
-public class UserController{
-	
-	@Autowired
-	private UserService userService;
-	
-	@GetMapping("/hello")
-	public String greet() {
-		return "Hello From Users";
-	}
-	
-	@GetMapping("/{id}")
-	public UserModel getUserById(@PathVariable Long id) {
-		return userService.getUserById(id);
-	}
-	
-	@GetMapping("/{id}/bookings")
-	public List<BookingModel> getAllBookings(@PathVariable Long id){
-		return userService.getAllBookings(id);
-	}
-	
-	@GetMapping("/{id}/refunds")
-	public List<RefundModel> getAllRefunds(@PathVariable Long id){
-		return userService.getAllRefunds(id);
-	}
-	
-	@PostMapping("")
-	public UserModel create(@RequestBody UserModel user) {
-		return userService.createUser(user);
-	}
-	
-	
-	
+public class UserController {
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping("/hello")
+    public ResponseEntity<String> greet() {
+
+        return ResponseEntity.ok("Hello From Users");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserModel> getUserById(
+            @PathVariable Long id) {
+
+        UserModel user = userService.getUserById(id);
+
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/{id}/bookings")
+    public ResponseEntity<List<BookingModel>> getAllBookings(
+            @PathVariable Long id) {
+
+        List<BookingModel> bookings = userService.getAllBookings(id);
+
+        return ResponseEntity.ok(bookings);
+    }
+
+    @GetMapping("/{id}/refunds")
+    public ResponseEntity<List<RefundModel>> getAllRefunds(
+            @PathVariable Long id) {
+
+        List<RefundModel> refunds = userService.getAllRefunds(id);
+
+        return ResponseEntity.ok(refunds);
+    }
+
+    @PostMapping
+    public ResponseEntity<UserModel> create(
+            @RequestBody UserModel user) {
+
+        UserModel createdUser = userService.createUser(user);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(createdUser);
+    }
 }

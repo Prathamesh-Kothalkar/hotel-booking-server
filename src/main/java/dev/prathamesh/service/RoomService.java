@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import dev.prathamesh.expection.ResourceNotFoundException;
 import dev.prathamesh.model.HotelModel;
 import dev.prathamesh.model.RoomModel;
 import dev.prathamesh.repository.HotelRepo;
@@ -31,7 +32,7 @@ public class RoomService{
 	//create;
 	public RoomModel createRoom(CreateRoomRequest request) {
 		 HotelModel hotel = hotelRepo.findById(request.getHotelId())
-	                .orElseThrow(() -> new RuntimeException("Hotel not found"));
+	                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found"));
 
 	        RoomModel room = new RoomModel();
 

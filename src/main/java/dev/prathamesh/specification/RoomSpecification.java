@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 
 import dev.prathamesh.model.BookingModel;
-import dev.prathamesh.model.HotelModel;
 import dev.prathamesh.model.RoomModel;
 import dev.prathamesh.types.BookingStatus;
 import dev.prathamesh.types.RoomSearchRequest;

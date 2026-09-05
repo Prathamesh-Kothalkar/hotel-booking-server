@@ -2,6 +2,7 @@ package dev.prathamesh.service;
 
 import org.springframework.stereotype.Service;
 
+import dev.prathamesh.expection.ResourceNotFoundException;
 import dev.prathamesh.model.PaymentModel;
 import dev.prathamesh.repository.PaymentRepo;
 
@@ -14,6 +15,6 @@ public class PaymentService{
 	}
 	
 	public PaymentModel getPaymentDetailsById(Long id) {
-		return paymentRepo.findById(id).orElse(null);
+		return paymentRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Payment Not found with id :- "+id));
 	}
 }

@@ -2,6 +2,7 @@ package dev.prathamesh.service;
 
 import org.springframework.stereotype.Service;
 
+import dev.prathamesh.expection.ResourceNotFoundException;
 import dev.prathamesh.model.RefundModel;
 import dev.prathamesh.repository.RefundRepo;
 
@@ -14,7 +15,7 @@ public class RefundService{
 	}
 	
 	public RefundModel getRefundById(Long id) {
-		return refundRepo.findById(id).orElse(null);
+		return refundRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Refund not Found with id "+id));
 	}
 	
 }

@@ -1,46 +1,56 @@
 package dev.prathamesh.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import dev.prathamesh.model.BookingModel;
 import dev.prathamesh.service.BookingService;
 import dev.prathamesh.types.BookingRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-
-
 @RestController
 @RequestMapping("/api/v1/bookings")
+public class BookingController {
 
-public class BookingController{
-	@Autowired
-	BookingService bookingService;
+    @Autowired
+    private BookingService bookingService;
 
-    
-	@GetMapping("/hello")
-	public String greet() {
-		return "Hello From Booking";
-	}
-	
-	@PostMapping()
-	public BookingModel createBooking(@RequestBody BookingRequest bookingRequest) {
-		return bookingService.bookRoom(bookingRequest);
-	}
-	
-	@PostMapping("/{id}/cancel")
-	public BookingModel cancelOrderByBooking(@PathVariable Long id) {
-		return bookingService.cancelBookingId(id);
-	}
-	
-	@GetMapping("/{id}")
-	public BookingModel getBookingById(@PathVariable Long id) {
-		return bookingService.getBookingById(id);
-	}
-	
+    @GetMapping("/hello")
+    public ResponseEntity<String> greet() {
+
+        return ResponseEntity
+                .ok("Hello From Booking");
+    }
+
+    @PostMapping
+    public ResponseEntity<BookingModel> createBooking(
+            @RequestBody BookingRequest bookingRequest) {
+
+        BookingModel booking = bookingService.bookRoom(bookingRequest);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(booking);
+    }
+
+    @PostMapping("/{id}/cancel")
+    public ResponseEntity<BookingModel> cancelBooking(
+            @PathVariable Long id) {
+
+        BookingModel booking = bookingService.cancelBookingId(id);
+
+        return ResponseEntity
+                .ok(booking);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BookingModel> getBookingById(
+            @PathVariable Long id) {
+
+        BookingModel booking = bookingService.getBookingById(id);
+
+        return ResponseEntity
+                .ok(booking);
+    }
 }
