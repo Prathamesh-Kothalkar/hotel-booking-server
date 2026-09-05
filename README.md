@@ -75,7 +75,7 @@ The LLM never accesses the database or business logic directly — it can only r
 
 | Layer | Technology |
 |---|---|
-| Language | Java 17 |
+| Language | Java 21 |
 | Framework | Spring Boot (Web, Data JPA, Validation) |
 | Database | PostgreSQL |
 | AI Layer | Spring AI + LLM function/tool calling |

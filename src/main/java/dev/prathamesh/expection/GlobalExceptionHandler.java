@@ -71,6 +71,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInternalServerError(Exception ex) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse(500, "Something went wrong ", "Please Try again later"));
+                .body(new ErrorResponse(500, "Something went wrong ", ex.getMessage()));
     }
 }

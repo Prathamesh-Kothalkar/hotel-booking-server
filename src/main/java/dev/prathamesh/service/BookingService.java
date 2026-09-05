@@ -22,7 +22,6 @@ import dev.prathamesh.types.BookingRequest;
 import dev.prathamesh.types.BookingStatus;
 import dev.prathamesh.types.PaymentStatus;
 import dev.prathamesh.types.RefundStatus;
-import dev.prathamesh.types.RoomStatus;
 
 @Service
 public class BookingService {
