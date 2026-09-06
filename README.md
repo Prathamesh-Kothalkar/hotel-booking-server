@@ -129,7 +129,7 @@ Full DDL available in [`Project Document`](https://docs.google.com/document/d/1n
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Java 17+
+- Java 21
 - Maven
 - PostgreSQL 15+
 
@@ -162,6 +162,3 @@ The API will be available at `http://localhost:8080`.
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License.

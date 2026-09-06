@@ -15,8 +15,20 @@ public class BookingRequest {
     public BookingRequest() {
     	
     }
+    
+    
 
-    public Long getUserId() {
+    public BookingRequest(Long userId, Long roomId, LocalDate checkInDate, LocalDate checkOutDate, Short numGuests) {
+		this.userId = userId;
+		this.roomId = roomId;
+		this.checkInDate = checkInDate;
+		this.checkOutDate = checkOutDate;
+		this.numGuests = numGuests;
+	}
+
+
+
+	public Long getUserId() {
         return userId;
     }
 

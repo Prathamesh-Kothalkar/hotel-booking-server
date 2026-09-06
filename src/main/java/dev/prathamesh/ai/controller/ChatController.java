@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.prathamesh.ai.dto.ChatRequest;
 import dev.prathamesh.ai.dto.ChatResponse;
+import dev.prathamesh.expection.ResourceNotFoundException;
 
 @RestController
 @RequestMapping("/api/v1/chat")
@@ -23,6 +24,9 @@ public class ChatController {
     @PostMapping
     public ChatResponse chat(@RequestBody ChatRequest request) {
     	System.out.println("Hitted");
+    	if(request.message()==null) {
+    		throw new ResourceNotFoundException("Message can't be null");
+    	}
         String reply = chatClient.prompt()
                 .user(request.message())
                 .call()
