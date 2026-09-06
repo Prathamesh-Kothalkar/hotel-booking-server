@@ -73,4 +73,16 @@ public class BookingTools {
             );
     }
     
+    @Tool(description = "Cancel the Booking order with specified bookingId ")
+    public BookingStatusResult cancelBooking(@ToolParam(description = "The bookingId which need to cancel") Long id){
+    	BookingModel booking = bookingService.cancelBookingId(id);
+    	return new BookingStatusResult(
+                booking.getBookingId(),
+                booking.getStatus().name(),
+                booking.getCheckInDate().toString(),
+                booking.getCheckOutDate().toString(),
+                booking.getTotalAmount()
+        );
+    }
+    
 }
