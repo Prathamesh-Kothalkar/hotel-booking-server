@@ -7,6 +7,7 @@ public class User{
 	String name;
 	String email;
 	String phone;
+	String password;
 	OffsetDateTime createdAt;
 	public Long getUserId() {
 		return userId;
@@ -14,6 +15,15 @@ public class User{
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
+	
+	public void  setPassword(String password) {
+		this.password=password;
+	}
+	
+	public String getPassword() {
+		return password;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -38,6 +48,7 @@ public class User{
 	public void setCreatedAt(OffsetDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+	
 	
 	
 }

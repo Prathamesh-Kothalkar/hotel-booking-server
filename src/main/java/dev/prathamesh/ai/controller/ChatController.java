@@ -1,5 +1,6 @@
 package dev.prathamesh.ai.controller;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +13,7 @@ import dev.prathamesh.ai.dto.ChatResponse;
 import dev.prathamesh.expection.ResourceNotFoundException;
 
 @RestController
-@RequestMapping("/api/v1/chat")
+@RequestMapping("/api/v1/chat") 
 public class ChatController {
 
     private final ChatClient chatClient;
@@ -22,13 +23,15 @@ public class ChatController {
     }
 
     @PostMapping
-    public ChatResponse chat(@RequestBody ChatRequest request) {
+    public ChatResponse chat(@RequestBody ChatRequest request,Authentication auth) {
     	System.out.println("Hitted");
+    	Long userId = (Long) auth.getPrincipal();
     	if(request.message()==null) {
     		throw new ResourceNotFoundException("Message can't be null");
     	}
         String reply = chatClient.prompt()
                 .user(request.message())
+                .system(s -> s.param("userId", userId))
                 .call()
                 .content();
 

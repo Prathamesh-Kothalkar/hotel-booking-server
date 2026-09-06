@@ -3,6 +3,7 @@ package dev.prathamesh.model;
 import java.time.OffsetDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.jspecify.annotations.Nullable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,6 +29,9 @@ public class UserModel {
 
     @Column(unique = true, length = 20)
     private String phone;
+    
+    @Column(nullable = false)
+    private String password;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -81,6 +85,15 @@ public class UserModel {
 
 	public void setCreatedAt(OffsetDateTime createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public void setPassword( String encode) {
+		// TODO Auto-generated method stub
+		this.password=encode;
+	}
+
+	public String getPassword() {
+		return password;
 	}
 
 }	

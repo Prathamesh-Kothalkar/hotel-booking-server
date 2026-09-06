@@ -48,12 +48,15 @@ public class BookingService {
     }
     
     @Transactional
-    public BookingModel cancelBookingId(Long id) {
+    public BookingModel cancelBookingId(Long id,Long requestingUserId) {
     	
         BookingModel booking = bookingRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Booking not found with id: " + id));
-
+        
+        if (!booking.getUser().getUserId().equals(requestingUserId)) {
+            throw new dev.prathamesh.expection.AccessDeniedException("You do not have permission to cancel this booking");
+        }
         
         if (booking.getStatus() == BookingStatus.CANCELLED) {
             throw new IllegalStateException("Booking is already cancelled");

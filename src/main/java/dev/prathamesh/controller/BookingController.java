@@ -3,6 +3,7 @@ package dev.prathamesh.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import dev.prathamesh.model.BookingModel;
@@ -25,8 +26,9 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<BookingModel> createBooking(
-            @RequestBody BookingRequest bookingRequest) {
-
+            @RequestBody BookingRequest bookingRequest,Authentication auth) {
+    	Long userId = (Long) auth.getPrincipal();
+    	bookingRequest.setUserId(userId);
         BookingModel booking = bookingService.bookRoom(bookingRequest);
 
         return ResponseEntity
@@ -36,9 +38,9 @@ public class BookingController {
 
     @PostMapping("/{id}/cancel")
     public ResponseEntity<BookingModel> cancelBooking(
-            @PathVariable Long id) {
-
-        BookingModel booking = bookingService.cancelBookingId(id);
+            @PathVariable Long id,Authentication auth) {
+    	Long userId = (Long) auth.getPrincipal();
+        BookingModel booking = bookingService.cancelBookingId(id,userId);
 
         return ResponseEntity
                 .ok(booking);

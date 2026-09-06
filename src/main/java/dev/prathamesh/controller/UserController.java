@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,41 +33,31 @@ public class UserController {
         return ResponseEntity.ok("Hello From Users");
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/my-profile")
     public ResponseEntity<UserModel> getUserById(
-            @PathVariable Long id) {
-
-        UserModel user = userService.getUserById(id);
+           Authentication auth) {
+    	Long userId = (Long) auth.getPrincipal();
+        UserModel user = userService.getUserById(userId);
 
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/{id}/bookings")
+    @GetMapping("/my/bookings")
     public ResponseEntity<List<BookingModel>> getAllBookings(
-            @PathVariable Long id) {
-
-        List<BookingModel> bookings = userService.getAllBookings(id);
+Authentication auth) {
+    	Long userId = (Long) auth.getPrincipal();
+        List<BookingModel> bookings = userService.getAllBookings(userId);
 
         return ResponseEntity.ok(bookings);
     }
 
-    @GetMapping("/{id}/refunds")
+    @GetMapping("/my/refunds")
     public ResponseEntity<List<RefundModel>> getAllRefunds(
-            @PathVariable Long id) {
-
-        List<RefundModel> refunds = userService.getAllRefunds(id);
+    		Authentication auth) {
+    	Long userId = (Long) auth.getPrincipal();
+        List<RefundModel> refunds = userService.getAllRefunds(userId);
 
         return ResponseEntity.ok(refunds);
     }
 
-    @PostMapping
-    public ResponseEntity<UserModel> create(
-            @RequestBody UserModel user) {
-
-        UserModel createdUser = userService.createUser(user);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(createdUser);
-    }
 }
