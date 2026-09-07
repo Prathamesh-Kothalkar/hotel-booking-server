@@ -1,4 +1,9 @@
 package dev.prathamesh.expection;
 public class AccessDeniedException extends RuntimeException {
-    public AccessDeniedException(String message) { super(message); }
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	public AccessDeniedException(String message) { super(message); }
 }

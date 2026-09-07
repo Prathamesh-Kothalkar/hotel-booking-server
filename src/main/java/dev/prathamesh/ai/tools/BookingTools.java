@@ -10,20 +10,24 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import dev.prathamesh.ai.dto.BookingStatusResult;
+import dev.prathamesh.ai.guardrail.PendingConfirmationStore;
 import dev.prathamesh.model.BookingModel;
 import dev.prathamesh.service.BookingService;
 import dev.prathamesh.service.UserService;
 import dev.prathamesh.types.BookingRequest;
+import dev.prathamesh.types.BookingStatus;
 
 @Component
 public class BookingTools {
 
     private final BookingService bookingService;
     private final UserService userService;
+    private final PendingConfirmationStore confirmationStore;
 
-    public BookingTools(BookingService bookingService, UserService userService) {
+    public BookingTools(BookingService bookingService, UserService userService, PendingConfirmationStore confirmationStore) {
         this.bookingService = bookingService;
         this.userService = userService;
+        this.confirmationStore=confirmationStore;
     }
 
     // Single source of truth for "who is actually asking" — never trust the LLM for this.
@@ -82,11 +86,36 @@ public class BookingTools {
         return toResult(booking);
     }
 
-    @Tool(description = "Cancel a booking by its booking ID. Only works for bookings belonging to the current user.")
-    public BookingStatusResult cancelBooking(
-            @ToolParam(description = "The booking ID to cancel") Long id) {
-
-        BookingModel booking = bookingService.cancelBookingId(id, currentUserId());
-        return toResult(booking);
-    }
+    @Tool(description = "Start the process of cancelling a booking. Shows the booking details and " +
+            "returns a confirmation reference. Does NOT actually cancel anything yet — " +
+            "you must call confirmCancelBooking after the user explicitly confirms.")
+		public String requestCancelBooking(
+		@ToolParam(description = "The booking ID to cancel") Long bookingId) {
+		
+			BookingModel booking = bookingService.getBookingById(bookingId);
+			assertOwnership(booking, currentUserId());
+			
+			if (booking.getStatus() == BookingStatus.CANCELLED) {
+			return "This booking is already cancelled.";
+			}
+			
+			String token = confirmationStore.create(currentUserId(), bookingId);
+			
+			return String.format(
+			"Booking #%d: %s to %s, total ₹%s. Ask the user to confirm cancellation. " +
+			"If they say yes, call confirmCancelBooking with confirmationToken=%s",
+			booking.getBookingId(), booking.getCheckInDate(), booking.getCheckOutDate(),
+			booking.getTotalAmount(), token);
+		}
+		
+		@Tool(description = "Actually cancels a booking. Only call this after the user has explicitly " +
+		            "confirmed, using the confirmationToken from a prior requestCancelBooking call.")
+		public BookingStatusResult confirmCancelBooking(
+		@ToolParam(description = "The confirmation token from requestCancelBooking") String confirmationToken) {
+		
+			Long bookingId = confirmationStore.consume(confirmationToken, currentUserId());
+			BookingModel booking = bookingService.cancelBookingId(bookingId, currentUserId());
+			return toResult(booking);
+		}
 }
+	

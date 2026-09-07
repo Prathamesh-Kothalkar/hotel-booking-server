@@ -2,6 +2,7 @@ package dev.prathamesh.ai.controller;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,15 +24,13 @@ public class ChatController {
     }
 
     @PostMapping
-    public ChatResponse chat(@RequestBody ChatRequest request,Authentication auth) {
-    	System.out.println("Hitted");
-    	Long userId = (Long) auth.getPrincipal();
-    	if(request.message()==null) {
-    		throw new ResourceNotFoundException("Message can't be null");
-    	}
+    public ChatResponse chat(@RequestBody ChatRequest request, Authentication auth) {
+        Long userId = (Long) auth.getPrincipal();
+        String conversationId = "user-" + userId + "-" + request.sessionId();
+
         String reply = chatClient.prompt()
                 .user(request.message())
-                .system(s -> s.param("userId", userId))
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
                 .call()
                 .content();
 
