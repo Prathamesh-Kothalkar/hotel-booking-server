@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.access.AccessDeniedException;
 
 import dev.prathamesh.expection.*;
 import dev.prathamesh.model.BookingModel;
@@ -48,7 +49,7 @@ public class BookingService {
     	BookingModel booking = bookingRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking not found with id: " + id));
 
         if (!booking.getUser().getUserId().equals(userId)) {
-            throw new dev.prathamesh.expection.AccessDeniedException("You do not have permission to cancel this booking");
+            throw new AccessDeniedException("You do not have permission to cancel this booking");
         }
     	return booking;
     }
@@ -61,7 +62,7 @@ public class BookingService {
                         "Booking not found with id: " + id));
         
         if (!booking.getUser().getUserId().equals(requestingUserId)) {
-            throw new dev.prathamesh.expection.AccessDeniedException("You do not have permission to cancel this booking");
+            throw new AccessDeniedException("You do not have permission to cancel this booking");
         }
         
         if (booking.getStatus() == BookingStatus.CANCELLED) {
@@ -177,8 +178,6 @@ public class BookingService {
         }
 
         booking.setStatus(BookingStatus.CONFIRMED);
-//        room.setStatus(RoomStatus.BOOKED);
-//        roomRepo.save(room);
         return bookingRepo.save(booking);
     }
 }
