@@ -43,8 +43,14 @@ public class BookingService {
         this.paymentService = paymentService;
     }
     
-    public BookingModel getBookingById(Long id) {
-    	return bookingRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking not found with id: " + id));
+    public BookingModel getBookingById(Long id, Long userId) {
+    	
+    	BookingModel booking = bookingRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Booking not found with id: " + id));
+
+        if (!booking.getUser().getUserId().equals(userId)) {
+            throw new dev.prathamesh.expection.AccessDeniedException("You do not have permission to cancel this booking");
+        }
+    	return booking;
     }
     
     @Transactional
@@ -108,6 +114,8 @@ public class BookingService {
                 || !request.getCheckOutDate().isAfter(request.getCheckInDate())) {
             throw new IllegalArgumentException("check-out date must be after check-in date");
         }
+        
+        
 
         UserModel user = userRepo.findById(request.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + request.getUserId()));
@@ -121,6 +129,10 @@ public class BookingService {
 
         if (room.getStatus() == dev.prathamesh.types.RoomStatus.MAINTENANCE) {
             throw new RoomNotAvailableException("Room " + room.getRoomId() + " is under maintenance");
+        }
+        
+        if(request.getNumGuests()==null || request.getNumGuests()>room.getNoOfBeds()) {
+        	throw new IllegalArgumentException("Check the number of adults");
         }
 
         boolean overlapping = bookingRepo.existsOverlappingBooking(

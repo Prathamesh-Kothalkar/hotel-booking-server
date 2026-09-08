@@ -14,7 +14,11 @@ public class PaymentService{
 		this.paymentRepo=repo;
 	}
 	
-	public PaymentModel getPaymentDetailsById(Long id) {
-		return paymentRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Payment Not found with id :- "+id));
+	public PaymentModel getPaymentDetailsById(Long id,Long userId) {
+		PaymentModel payment=paymentRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Payment Not found with id :- "+id));
+		if(!payment.getUser().getUserId().equals(userId)) {
+			throw new IllegalArgumentException("You can't access the payments details");
+		}
+		return payment;
 	}
 }

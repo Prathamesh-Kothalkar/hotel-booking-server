@@ -14,8 +14,13 @@ public class RefundService{
 		this.refundRepo = refundRepo;
 	}
 	
-	public RefundModel getRefundById(Long id) {
-		return refundRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Refund not Found with id "+id));
+	public RefundModel getRefundById(Long id,Long userID) {
+		RefundModel refund=refundRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Refund not Found with id "+id));
+		if(!refund.getUser().getUserId().equals(userID)) {
+			throw new IllegalArgumentException("You can't access these details");
+		}
+		
+		return refund;
 	}
 	
 }

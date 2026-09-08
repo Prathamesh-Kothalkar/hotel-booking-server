@@ -55,8 +55,8 @@ public class BookingTools {
                          "Only works for bookings belonging to the current user.")
     public BookingStatusResult getBookingStatus(
             @ToolParam(description = "The booking ID to look up") Long bookingId) {
-
-        BookingModel booking = bookingService.getBookingById(bookingId);
+    	
+        BookingModel booking = bookingService.getBookingById(bookingId,currentUserId());
         assertOwnership(booking, currentUserId());
         return toResult(booking);
     }
@@ -92,7 +92,7 @@ public class BookingTools {
 		public String requestCancelBooking(
 		@ToolParam(description = "The booking ID to cancel") Long bookingId) {
 		
-			BookingModel booking = bookingService.getBookingById(bookingId);
+			BookingModel booking = bookingService.getBookingById(bookingId,currentUserId());
 			assertOwnership(booking, currentUserId());
 			
 			if (booking.getStatus() == BookingStatus.CANCELLED) {

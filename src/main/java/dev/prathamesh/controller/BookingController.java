@@ -48,9 +48,9 @@ public class BookingController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BookingModel> getBookingById(
-            @PathVariable Long id) {
-
-        BookingModel booking = bookingService.getBookingById(id);
+            @PathVariable Long id,Authentication auth) {
+    	Long userId=(Long) auth.getPrincipal();
+        BookingModel booking = bookingService.getBookingById(id,userId);
 
         return ResponseEntity
                 .ok(booking);
