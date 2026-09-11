@@ -12,6 +12,7 @@ import dev.prathamesh.types.AuthResponse;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+//@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final UserRepo userRepo;
