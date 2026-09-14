@@ -1,8 +1,11 @@
+
 package dev.prathamesh.security;
 
 import java.util.Arrays;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -30,29 +33,80 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // Add this
+            // Enable CORS using the configuration defined below
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+
+            // Disable CSRF because this is a stateless JWT-based API
             .csrf(AbstractHttpConfigurer::disable)
-            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+            // Do not create or use HTTP sessions
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+
+            // Authorization rules
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/auth/**", "/api/v1/hotels/**", "/api/v1/rooms/**","/api/v1/health/**").permitAll()
+
+                // Allow browser preflight requests
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // Public endpoints
+                .requestMatchers(
+                    "/api/v1/auth/**",
+                    "/api/v1/hotels/**",
+                    "/api/v1/rooms/**",
+                    "/api/v1/health/**"
+                ).permitAll()
+
+                // All other endpoints require authentication
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+            // Apply JWT authentication filter
+            .addFilterBefore(
+                jwtAuthFilter,
+                UsernamePasswordAuthenticationFilter.class
+            );
+
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("https://*.vercel.app","https://hotel-ai-agoda.vercel.app/","http://localhost:3000","*"));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Allowed frontend origins
+        config.setAllowedOrigins(Arrays.asList(
+            "https://hotel-ai-agoda.vercel.app",
+            "http://localhost:3000"
+        ));
+
+        // Allowed HTTP methods
+        config.setAllowedMethods(Arrays.asList(
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "OPTIONS"
+        ));
+
+        // Allow request headers such as Authorization and Content-Type
         config.setAllowedHeaders(Arrays.asList("*"));
+
+        // Allow credentials
         config.setAllowCredentials(true);
+
+        // Cache preflight response for 1 hour
         config.setMaxAge(3600L);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source =
+            new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 }
