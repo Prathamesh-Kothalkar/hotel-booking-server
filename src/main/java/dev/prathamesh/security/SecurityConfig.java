@@ -35,7 +35,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/v1/auth/**", "/api/v1/hotels/**", "/api/v1/rooms/**").permitAll()
+                .requestMatchers("/api/v1/auth/**", "/api/v1/hotels/**", "/api/v1/rooms/**","/api/v1/health/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -45,7 +45,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("https://*.vercel.app","https://hotel-ai-agoda.vercel.app/","http://localhost:3000"));
+        config.setAllowedOrigins(Arrays.asList("https://*.vercel.app","https://hotel-ai-agoda.vercel.app/","http://localhost:3000","*"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowCredentials(true);
