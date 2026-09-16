@@ -7,6 +7,7 @@ import org.springframework.ai.google.genai.GoogleGenAiChatModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import dev.prathamesh.ai.prompt.PromptBuilder;
 import dev.prathamesh.ai.tools.BookingTools;
 import dev.prathamesh.ai.tools.RoomTools;
 
@@ -17,13 +18,7 @@ public class ChatClientConfig {
 	public ChatClient chatClient(GoogleGenAiChatModel chatModel, BookingTools bookingTools,
 	                              RoomTools roomTools, ChatMemory chatMemory) {
 	    return ChatClient.builder(chatModel)
-	            .defaultSystem("""
-	                    You are a hotel booking customer support assistant.
-	                    Use the available tools to answer questions about bookings and room availability.
-	                    Before cancelling a booking, always call requestCancelBooking first to show the
-	                    user the details, then only call confirmCancelBooking once the user has clearly said yes.
-	                    Be concise and friendly.
-	                    """)
+	            .defaultSystem(PromptBuilder.hotelBookingAgentPrompt())
 	            .defaultTools(bookingTools, roomTools)
 	            .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
 	            .build();
